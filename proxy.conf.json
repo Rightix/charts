@@ -1,0 +1,9 @@
+{
+  "/api/*": {
+    "target": "https://api.weather.yandex.ru/v1/forecast",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {"^/api" : ""},
+    "logLevel": "debug"
+  }
+}
