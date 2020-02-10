@@ -112,7 +112,6 @@ export class ChartComponent implements OnInit {
     })
       .subscribe(response => {
         this.response = response;
-        console.log(response)
         this.isLoaded = true;
         this.localDates = this.initDates();
         this.initTempChartForecast(0);

@@ -35,7 +35,6 @@ export class ForecastComponent implements OnInit {
       .subscribe(response => {
         this.response = response;
         this.isLoaded = true;
-        console.log(response)
         this.currentForecast = this.getCurrentForecast(response);
         this.forecastIconUrl = this.getForecastIcon(response);
       });
@@ -46,7 +45,6 @@ export class ForecastComponent implements OnInit {
   }
   getCurrentForecast(response) {
     const data = response.fact;
-    const iconUrl = 'https://yastatic.net/weather/i/icons/blueye/color/svg/.svg.';
     return [
       {name: 'Температура воздуха: ', value: `${data.temp} °C`},
       {name: 'Ощущается как: ', value: `${data.feels_like} °C`},
