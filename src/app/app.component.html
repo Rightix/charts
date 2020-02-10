@@ -1,17 +1,4 @@
-<header>
-
-</header>
 <div class="app-wrapper">
-  <app-chart
-    *ngIf="loaded"
-    [response]="response"
-
-  ></app-chart>
+  <app-header></app-header>
   <router-outlet></router-outlet>
 </div>
-<!--
-[dates]="localDates"
-[forecastOnDay]="forecastOnDay"
-[tempOnCurrentDay]="tempOnCurrentDay"
-[hoursOnDay]="hoursOnDay"
-[localDates]="localDates"-->

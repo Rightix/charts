@@ -1,123 +1,114 @@
-<!--Temperature chart-->
-<div class="chart-container">
-  <div class="select-row">
-    <mat-form-field class="select-date">
-      <mat-select
-        placeholder="Выберите дату"
-        [(value)]="selectedDayIndexInTempChart"
-        (selectionChange)="initTempChartForecast($event.value, true)"
-      >
-        <mat-option
-          *ngFor="let localDate of localDates"
-          [value]="localDate.dateIndex"
+<div *ngIf="isLoaded" class="dashboard-page">
+  <div class="chart-container">
+    <div class="select-row">
+      <mat-form-field class="select-date">
+        <mat-select
+          placeholder="Выберите дату"
+          [(value)]="selectedDayIndexInTempChart"
+          (selectionChange)="initTempChartForecast($event.value, true)"
         >
-          {{localDate.dateString}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-select
-        placeholder="Отобразить"
-        [formControl]="dataControl1"
-        (selectionChange)="setChartData($event.value, 'chart1')"
-        multiple
-      >
-        <mat-option
-          *ngFor="let option of optionsToView"
-          [value]="option.value"
+          <mat-option
+            *ngFor="let localDate of localDates"
+            [value]="localDate.dateIndex"
+          >
+            {{localDate.dateString}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="select-data">
+        <mat-select
+          placeholder="Отобразить"
+          [formControl]="dataControl1"
+          (selectionChange)="setChartData($event.value, 'chart1')"
+          multiple
         >
-          {{option.name}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field class="select-type">
-      <mat-select
-        placeholder="Тип графика"
-        [(value)]="chartOptionsTemp.chart.type"
-        (selectionChange)="toUpdateChartTemp()"
-      >
-        <mat-option
-          *ngFor="let chartType of chartTypes"
-          [value]="chartType"
+          <mat-option
+            *ngFor="let option of optionsToView"
+            [value]="option.value"
+          >
+            {{option.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="select-type">
+        <mat-select
+          placeholder="Тип графика"
+          [(value)]="chartOptionsTemp.chart.type"
+          (selectionChange)="toUpdateChartTemp()"
         >
-          {{ chartType }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+          <mat-option
+            *ngFor="let chartType of chartTypes"
+            [value]="chartType"
+          >
+            {{ chartType }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="chart-wrapper">
+      <highcharts-chart
+        [Highcharts]="Highcharts"
+        [options]="chartOptionsTemp"
+        [(update)]="updateChartTemp"
+        (chartInstance)="getInstanceChart($event, 'chart1')"
+        class="hightcharts-item"
+      ></highcharts-chart>
+    </div>
   </div>
-  <div class="chart-wrapper">
-    <highcharts-chart
-      [Highcharts]="Highcharts"
-      [options]="chartOptionsTemp"
-      [(update)]="updateChartTemp"
-      (chartInstance)="getInstanceChart($event, 'chart1')"
-      class="hightcharts-item"
-    ></highcharts-chart>
+  <div class="chart-container">
+    <div class="select-row">
+      <mat-form-field class="select-date">
+        <mat-select
+          placeholder="Выберите дату"
+          [(value)]="selectedDayIndexInFeelsChart"
+          (selectionChange)="initFeelsChartForecast($event.value, true)"
+        >
+          <mat-option
+            *ngFor="let localDate of localDates"
+            [value]="localDate.dateIndex"
+          >
+            {{localDate.dateString}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="select-data">
+        <mat-select
+          placeholder="Отобразить"
+          [formControl]="dataControl2"
+          (selectionChange)="setChartData($event.value, 'chart2')"
+          multiple
+        >
+          <mat-option
+            *ngFor="let option of optionsToView"
+            [value]="option.value"
+          >
+            {{option.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="select-type">
+        <mat-select
+          placeholder="Тип графика"
+          [(value)]="chartOptionsFeels.chart.type"
+          (selectionChange)="toUpdateChartFeels()"
+        >
+          <mat-option
+            *ngFor="let chartType of chartTypes"
+            [value]="chartType"
+          >
+            {{ chartType }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="chart-wrapper">
+      <highcharts-chart
+        [Highcharts]="Highcharts"
+        [options]="chartOptionsFeels"
+        (chartInstance)="getInstanceChart($event, 'chart2')"
+        [(update)]="updateChartFeels"
+        class="hightcharts-item"
+      ></highcharts-chart>
+    </div>
   </div>
 </div>
-<div class="chart-container">
-  <div class="select-row">
-    <mat-form-field class="select-date">
-      <mat-select
-        placeholder="Выберите дату"
-        [(value)]="selectedDayIndexInFeelsChart"
-        (selectionChange)="initFeelsChartForecast($event.value, true)"
-      >
-        <mat-option
-          *ngFor="let localDate of localDates"
-          [value]="localDate.dateIndex"
-        >
-          {{localDate.dateString}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-select
-        placeholder="Отобразить"
-        [formControl]="dataControl2"
-        (selectionChange)="setChartData($event.value, 'chart2')"
-        multiple
-      >
-        <mat-option
-          *ngFor="let option of optionsToView"
-          [value]="option.value"
-        >
-          {{option.name}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field class="select-type">
-      <mat-select
-        placeholder="Тип графика"
-        [(value)]="chartOptionsFeels.chart.type"
-        (selectionChange)="toUpdateChartFeels()"
-      >
-        <mat-option
-          *ngFor="let chartType of chartTypes"
-          [value]="chartType"
-        >
-          {{ chartType }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
-  <div class="chart-wrapper">
-    <highcharts-chart
-      [Highcharts]="Highcharts"
-      [options]="chartOptionsFeels"
-      (chartInstance)="getInstanceChart($event, 'chart2')"
-      [(update)]="updateChartFeels"
-      class="hightcharts-item"
-    ></highcharts-chart>
-  </div>
-</div>
-
-
-<!--<button mat-raised-button mat-button
-        color="primary"
-        (click)="changeType()"
->Button</button>
-<button mat-raised-button mat-button
-        color="primary"
-        (click)="changeColor()"
->Button</button>-->

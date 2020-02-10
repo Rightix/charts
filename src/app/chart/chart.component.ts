@@ -10,9 +10,9 @@ import * as Highcharts from 'highcharts';
   styleUrls: ['./chart.component.sass']
 })
 export class ChartComponent implements OnInit {
-  @Input() dates: any;
-  @Input() response;
   //
+  response;
+  isLoaded = false;
   tempChartData = [];
   feelsChartData = [];
   //
@@ -45,6 +45,15 @@ export class ChartComponent implements OnInit {
     subtitle: {
       text: 'Source: yandex.weather.ru'
     },
+    plotOptions: {
+      series: {
+        events: {
+          click: (e) => {
+            this.updateColor(e.point.series);
+          },
+        }
+      }
+    },
     xAxis: {
       categories: [],
     },
@@ -70,6 +79,15 @@ export class ChartComponent implements OnInit {
     subtitle: {
       text: 'Source: yandex.weather.ru'
     },
+    plotOptions: {
+      series: {
+        events: {
+          click: (e) => {
+            this.updateColor(e.point.series);
+          },
+        }
+      }
+    },
     xAxis: {
       categories: [],
     },
@@ -87,10 +105,25 @@ export class ChartComponent implements OnInit {
   constructor(private http: HttpClient) {
   }
   ngOnInit(): void {
-    // this.dataControl1.setValue([this.optionsToView[0]]);
-    this.localDates = this.initDates();
-    this.initTempChartForecast(0);
-    this.initFeelsChartForecast(0);
+    this.http.get<any>('api/?lat=61.784960&lon=34.346651&limit=7&', {
+      headers: new HttpHeaders({
+        'X-Yandex-API-Key': 'd68aa74c-2e33-446c-b7b2-4f834b0e9278',
+      })
+    })
+      .subscribe(response => {
+        this.response = response;
+        console.log(response)
+        this.isLoaded = true;
+        this.localDates = this.initDates();
+        this.initTempChartForecast(0);
+        this.initFeelsChartForecast(0);
+      });
+
+  }
+  updateColor(series) {
+    const [...colors] = this.chart1.options.colors;
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    series.update({color: randomColor}, true);
   }
   initTempChartForecast(dayIndex, changeDate?) {
     // Init default values
@@ -111,7 +144,6 @@ export class ChartComponent implements OnInit {
   initFeelsChartForecast(dayIndex, changeDate?) {
     if (changeDate) {
       // if date change
-      console.log(this.dataControl2.value)
       this.setChartData(this.dataControl2.value, 'chart2');
     } else {
       this.feelsChartData = this.getForecastsOnDay(dayIndex);
@@ -172,8 +204,6 @@ export class ChartComponent implements OnInit {
     });
   }
   setChartData(optionsStr, chartName) {
-    console.log(optionsStr)
-    console.log(chartName)
     this.tempChartData = this.getForecastsOnDay(this.selectedDayIndexInTempChart);
     this.feelsChartData = this.getForecastsOnDay(this.selectedDayIndexInFeelsChart);
     let chart;
@@ -188,8 +218,6 @@ export class ChartComponent implements OnInit {
         series = this.getSelectedData(optionsStr, this.feelsChartData);
         break;
     }
-    console.log(series)
-    console.log(chart)
     chart.update({series}, true, true);
   }
   getInstanceChart(chart: Highcharts.Chart, name) {
